@@ -1,0 +1,32 @@
+[{
+  "nom": "Demo",
+  "bornesId": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "position": {
+    "lat": "47.476432",
+    "long": "-0.539316"
+  },
+  "picto": "https:\/\/www.wifilib.com\/public\/img\/refonte\/Wifi-picto.png",
+  "shape": [
+    {
+      "lat": "47.470891",
+      "long": "-0.559143"
+    },
+    {
+      "lat": "47.463551",
+      "long": "-0.538758"
+    },
+    {
+      "lat": "47.483364",
+      "long": "-0.521206"
+    },
+    {
+      "lat": "47.489106",
+      "long": "-0.548972"
+    }
+  ]
+}]

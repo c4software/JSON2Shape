@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KML2Shape</title>
+    <title>JSON2Shape</title>
 
     <link rel="stylesheet" href="//cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
     <script src="//cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
-    
-    <script src="leaflet.filelayer.js"></script>
-    <script src="togeojson/togeojson.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 
     <script src="dataExport.js"></script>
-    <script src="shape.js"></script>
 
     <style>
         #map {
@@ -24,10 +21,43 @@
         .leaflet-overlay-pane>.leaflet-zoom-animated {
             opacity: .6 !important;
         }
+
+        #file-input{
+            display: none;
+        }
+
+        #chooseFile{
+            position: absolute;
+            top: 80px;
+            left: 10px;
+            z-index: 200;
+        }
+
+        .iconOpen{
+            background-color: #fff;
+            border-bottom: 1px solid #ccc;
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: black;
+
+            box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
+
+    <input type="file" id="file-input" />
+
+    <div id="chooseFile">
+        <i class="iconOpen">O</i>
+    </div>
 
     <script type="text/javascript">
 
@@ -38,14 +68,53 @@
 
         var map = L.map('map', {center: [46.7774317,4.2503798], zoom: 6}).addLayer(osm);
 
-        L.Control.FileLayerLoad.LABEL = '<i class="fa fa-folder-open">O</i>';
-        L.Control.fileLayerLoad({
-            fitBounds: true,
-            layerOptions: {pointToLayer: function (data, latlng) {
-                var shapeData = shapeIt(latlng.lat, latlng.lng).bindPopup(data.properties.name);
-                return shapeData;
-            }},
-        }).addTo(map);
+        $("#file-input").bind("change", readSingleFile);
+        $(".iconOpen").bind("click", function () {
+            $("#file-input").click();
+        });
+
+        function readSingleFile(e) {
+          var file = e.target.files[0];
+          if (!file) {
+            return;
+          }
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var contents = e.target.result;
+            load_json(contents);
+          };
+          reader.readAsText(file);
+        }
+
+        function load_json(data){
+            try {
+                data_parse = JSON.parse(data);
+                drawShape(data_parse);
+            } catch (e) {
+                console.log(e);
+                alert("Le JSON fourni est illisible.")
+            }
+        }
+
+        function drawShape(data){
+            var center;
+        	for(i in data){
+        		var current = data[i]
+        		// Création du polygon
+        		var polydata = [];
+        		for (bound in current.shape){
+        			bound = current.shape[bound];
+        			polydata.push([parseFloat(bound.lat),parseFloat(bound.long)])
+        		}
+
+        		L.polygon(polydata, {color:'#E8433A',stroke:false,fillOpacity:1}).addTo(map);
+
+                center = new L.LatLng(current.position.lat, current.position.long);
+        	}
+
+            map.setView(center, 13);
+        }
+
     </script>
     <div
 </body>
