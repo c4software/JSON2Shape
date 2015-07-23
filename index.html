@@ -7,8 +7,6 @@
     <script src="//cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 
-    <script src="dataExport.js"></script>
-
     <style>
         #map {
             position: absolute;
@@ -107,7 +105,7 @@
         			polydata.push([parseFloat(bound.lat),parseFloat(bound.long)])
         		}
 
-        		L.polygon(polydata, {color:'#E8433A',stroke:false,fillOpacity:1}).addTo(map);
+        		L.polygon(polydata, {color:'#E8433A',stroke:false,fillOpacity:1}).addTo(map).bindPopup(current.nom);
 
                 center = new L.LatLng(current.position.lat, current.position.long);
         	}
