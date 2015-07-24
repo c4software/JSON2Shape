@@ -108,6 +108,11 @@
         		L.polygon(polydata, {color:'#E8433A',stroke:false,fillOpacity:1}).addTo(map).bindPopup(current.nom);
 
                 center = new L.LatLng(current.position.lat, current.position.long);
+                
+                if(current.picto != ""){
+                    L.marker([current.position.lat, current.position.long]).addTo(map).bindPopup(current.nom)
+                }
+                
         	}
 
             map.setView(center, 13);
